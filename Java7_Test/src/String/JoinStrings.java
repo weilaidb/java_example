@@ -25,6 +25,9 @@ public class JoinStrings {
 		myString = 5 + 5 + " is ten";
 		System.out.println(myString);
 		
+		String doubleString = String.valueOf(3.1415926);
+		System.out.println(doubleString);
+		
 	}
 
 }
