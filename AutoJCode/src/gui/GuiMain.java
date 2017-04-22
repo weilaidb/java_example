@@ -12,6 +12,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -39,6 +42,9 @@ import java.awt.Image;
 
 
 import com.sleepycat.*;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.Environment;
 
 
 public class GuiMain extends JFrame {
@@ -46,9 +52,53 @@ public class GuiMain extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	
+	static String dbName;
+	static String fileName;
+	static Environment myDbEnvironment;
+	static DatabaseConfig dbConfig;
+	static Database myDatabase;
+	
+	
+	
+	public static void testdb1()
+	{
+		dbName = "test2.db";
+		fileName = "savefile.txt";
+		BerkeleyOper operdb = new BerkeleyOper(dbName, fileName);
+		operdb.openDatabase();
+		
+		int loopnum = 10000;
+		String test = "abc";
+		String value = "value";
+		String strresult;
+//		for (int i = 0; i < loopnum; i++) {
+//			writeToDatabase(test + i, value + 1000 + i ,true);			
+//		}
+		long begin = System.currentTimeMillis(); 
+		for (int i = 0; i < loopnum; i++) {
+			strresult = operdb.readFromDatabase(test + i);
+			if(strresult.contains("2"))
+			{
+				System.out.println(strresult + " contain 2");
+			}
+		}
+		long end = System.currentTimeMillis();   
+        long result = end - begin;
+        System.out.println("readFromDatabase nums : " + loopnum + ", 执行耗时:" + (end - begin) + " 毫秒");
+		
+//		readFromDatabase(test + 100);
+//		readFromDatabase(test + 1000);
+//		readFromDatabase(test + 2000);
+		
+        operdb.closeDatabase();	
+	}
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		testdb1();
 		System.out.println("==================================");
 		System.out.println();
 		System.out.println("gui main begin:");
@@ -144,36 +194,15 @@ public class GuiMain extends JFrame {
 //	Image img = new Image("xpic.jpg")  
 //	类名.setImageClipboard(img);  //给剪切板设置图片型内容   
 //	Image img2 = 类名.getImageClipboard(); //获取剪切板的图片型内容  
-//	
-	
-	
-	
-	
-	
-	
-	
-	
+//		
 	public class aboutBtnClickListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
-//			JButton jButton1=new JButton("OK");
-//			jButton1.addActionListener(this);
-//			JTextArea info = new JTextArea();
 			String verstr = "自动生成代码 \n "
 					+ "by 小魏莱 \n" 
 					+ version; 
 			
-			JLabel info;
-			
-
-//			info.setText(verstr);
-			
-			
-			
-			
+			JLabel info;			
 			//创建一个按钮对象,该对象被添加到对话框中
 			if(ison){
 				System.out.print("equals ok");
@@ -191,7 +220,6 @@ public class GuiMain extends JFrame {
 				about.setVisible(false);
 				ison = false;
 				//				about.setVisible(false);
-
 			}
 			else
 			{
@@ -297,7 +325,41 @@ public class GuiMain extends JFrame {
 //			lineEdit_Search.setText("");
 //			System.out.println("搜索关键字:" + lineEdit_Search.getText());
 			System.out.println("搜索关键字:" + lineEdit_Search.getText());
-			rview.setText(lineEdit_Search.getText());
+//			rview.setText(lineEdit_Search.getText());
+			dbName = "test2.db";
+			fileName = "savefile.txt";
+			
+			BerkeleyOper readdb = new BerkeleyOper(dbName, fileName);
+			readdb.openDatabase();
+//			readdb.readFromDatabase(lineEdit_Search.getText());
+			
+			String searchkey = lineEdit_Search.getText();
+		
+			long begin = System.currentTimeMillis(); 
+			boolean findedflag = false;
+			ArrayList<String> dblst = readdb.getEveryItem();
+			for (String inkey : dblst) {
+				
+//				System.out.println("====items : " + inkey);
+				String inresult = readdb.readFromDatabase(inkey);
+				if(inresult.contains(searchkey))
+				{
+					findedflag = true;
+					rview.setText(inresult);
+					System.out.println("==========find result of [" + searchkey + "]");
+				}
+			}
+			
+			if(!findedflag)
+			{
+				System.out.println("==========!!!no find result of [" + searchkey + "]");				
+			}
+			readdb.closeDatabase();
+			
+			long end = System.currentTimeMillis();   
+//	        long result = end - begin;
+	        System.out.println("readFromDatabase nums : " + dblst.size() + ", 执行耗时:" + (end - begin) + " 毫秒");
+			
 			
 		}
 		
@@ -308,10 +370,42 @@ public class GuiMain extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
 //			lineEdit_Search.setText("");
 			rview.setText("");
 //			System.out.println("搜索关键字:" + lineEdit_Search.getText());
+			
+		}
+		
+	}
+	
+    /**
+     * 获取当前的日期yyyyMMdd
+     */
+    public String getCurrentDate(){
+        return new SimpleDateFormat("yyyyMMdd").format(new Date());
+    }
+    
+    
+    /**
+     * 获取当前的时间yyyyMMddHHmmss
+     */
+    public String getCurrentTime(){
+        return new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+    }
+    
+	public class InDbBtnClickedLitener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			String keys = getCurrentTime();
+			System.out.println("入库, key:" + keys);
+			dbName = "test2.db";
+			fileName = "savefile.txt";
+			
+			BerkeleyOper writedb = new BerkeleyOper(dbName, fileName);
+			writedb.openDatabase();
+			writedb.writeToDatabase(keys, getSystemClipboard(), true);
+			writedb.closeDatabase();
 			
 		}
 		
@@ -451,6 +545,7 @@ public class GuiMain extends JFrame {
 		closeButton.addActionListener(new CloseBtnClickedListener());
 		rightcleanButton.addActionListener(new rightcleanButton_Listener());
 		getClipdButton.addActionListener(new getClipdButtonListener());
+		InDbButton.addActionListener(new InDbBtnClickedLitener());
 		
         Box vbox1=Box.createVerticalBox();
         vbox1.add(InDbButton);
