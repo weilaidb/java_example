@@ -53,80 +53,80 @@ public class OperateJdb {
 				"eg");
 		System.exit(EXIT_FAILURE);
 	}
-	/**
-	 * Main
-	 */
-	@SuppressWarnings("unused")
-	public static void main(String argv[]) {
-
-		System.out.println("app beging.....");
-		System.out.println("argv.length:" + argv.length);
-		for(int i = 0; i < argv.length; i++){
-			System.out.println(argv[i]);
-		}
-
-		//        if (argv.length < 2) {
-		//            usage();
-		//            return;
-		//        }
-		String dirname = "./";
-		//    	argv[1] = "insert";
-//		String argv_1 = "insert";
-		String argv_1 = "retrieve";
-		String argv_2 = "10000";
-		final int argv_length = 3;
-		//        File envHomeDirectory = new File(argv[0]);
-		File envHomeDirectory = new File(dirname);
-		//    	String filepath= "abc.db";
-		//        File envHomeDirectory = new File(filepath);
-
-		//        boolean doInsertArg = false;
-		//        if (argv[1].equalsIgnoreCase("insert")) {
-		//            doInsertArg = true;
-		//        } else if (argv[1].equalsIgnoreCase("retrieve")) {
-		//            doInsertArg = false;
-		//        } else {
-		//            usage();
-		//        }
-
-		boolean doInsertArg = false;
-		if (argv_1.equalsIgnoreCase("insert")) {
-			doInsertArg = true;
-		} else if (argv_1.equalsIgnoreCase("retrieve")) {
-			doInsertArg = false;
-		} else {
-			usage();
-		}
-
-		int startOffset = 0;
-		int numRecordsVal = 0;
-
-		if (doInsertArg) {
-
-			if (argv_length > 2) {
-				numRecordsVal = Integer.parseInt(argv_2);
-			} else {
-				usage();
-				return;
-			}
-
-			if (argv.length > 3) {
-				startOffset = Integer.parseInt(argv[3]);
-			}
-		}
-
-		try {
-			OperateJdb app = new OperateJdb(numRecordsVal,
-					doInsertArg,
-					envHomeDirectory,
-					startOffset);
-			app.run();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-			System.exit(EXIT_FAILURE);
-		}
-		System.exit(EXIT_SUCCESS);
-	}
+//	/**
+//	 * Main
+//	 */
+//	@SuppressWarnings("unused")
+//	public static void main(String argv[]) {
+//
+//		System.out.println("app beging.....");
+//		System.out.println("argv.length:" + argv.length);
+//		for(int i = 0; i < argv.length; i++){
+//			System.out.println(argv[i]);
+//		}
+//
+//		//        if (argv.length < 2) {
+//		//            usage();
+//		//            return;
+//		//        }
+//		String dirname = "./";
+//		//    	argv[1] = "insert";
+////		String argv_1 = "insert";
+//		String argv_1 = "retrieve";
+//		String argv_2 = "10000";
+//		final int argv_length = 3;
+//		//        File envHomeDirectory = new File(argv[0]);
+//		File envHomeDirectory = new File(dirname);
+//		//    	String filepath= "abc.db";
+//		//        File envHomeDirectory = new File(filepath);
+//
+//		//        boolean doInsertArg = false;
+//		//        if (argv[1].equalsIgnoreCase("insert")) {
+//		//            doInsertArg = true;
+//		//        } else if (argv[1].equalsIgnoreCase("retrieve")) {
+//		//            doInsertArg = false;
+//		//        } else {
+//		//            usage();
+//		//        }
+//
+//		boolean doInsertArg = false;
+//		if (argv_1.equalsIgnoreCase("insert")) {
+//			doInsertArg = true;
+//		} else if (argv_1.equalsIgnoreCase("retrieve")) {
+//			doInsertArg = false;
+//		} else {
+//			usage();
+//		}
+//
+//		int startOffset = 0;
+//		int numRecordsVal = 0;
+//
+//		if (doInsertArg) {
+//
+//			if (argv_length > 2) {
+//				numRecordsVal = Integer.parseInt(argv_2);
+//			} else {
+//				usage();
+//				return;
+//			}
+//
+//			if (argv.length > 3) {
+//				startOffset = Integer.parseInt(argv[3]);
+//			}
+//		}
+//
+//		try {
+//			OperateJdb app = new OperateJdb(numRecordsVal,
+//					doInsertArg,
+//					envHomeDirectory,
+//					startOffset);
+//			app.run();
+//		} catch (DatabaseException e) {
+//			e.printStackTrace();
+//			System.exit(EXIT_FAILURE);
+//		}
+//		System.exit(EXIT_SUCCESS);
+//	}
 
 	/**
 	 * Insert or retrieve data

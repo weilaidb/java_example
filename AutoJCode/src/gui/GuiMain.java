@@ -42,7 +42,19 @@ import com.sleepycat.*;
 
 
 public class GuiMain extends JFrame {
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		System.out.println("==================================");
+		System.out.println();
+		System.out.println("gui main begin:");
+		GuiMain gui = new GuiMain();
+		gui.genJGui();
+	}
 	
 //	设置系统剪切板内容[内容为文本]
 	public static void setSystemClipboard(String refContent){   
@@ -305,21 +317,7 @@ public class GuiMain extends JFrame {
 		
 	}
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-		System.out.println("==================================");
-		System.out.println();
-		System.out.println("gui main begin:");
-//		genGui();
-//		genJGui();
-		GuiMain gui = new GuiMain();
-		gui.genJGui();
-	}
 	JFrame frame;
 	JLabel label;
 	JButton lableButton;
@@ -334,32 +332,19 @@ public class GuiMain extends JFrame {
 	JButton pasteButton;
 	JButton autoindbButton;
 	JButton modifyButton;
-	
 	JButton deleteButton;
-	
 	JButton setupButton;
 	JButton toolButton;
 	JButton aboutButton;
 	JButton closeButton;
 	JTextField  lineEdit_Search;
-	
 	JCheckBox  checkbox_ag;
-	
-	
 	JComboBox<Object>  combox_dbsel;
-	
 	//===========inter use end  ===============
-	
-	
-	
+
 	JTextArea  rview;
-	
-
-
 	JEditorPane left1edit;
-
 	JEditorPane left2edit;
-
 	JEditorPane rightedit;
 
 	
@@ -379,7 +364,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.0";
+	final String version = "v1.1";
 	
 	//===========inter use begin===============
 	String currentdb;
