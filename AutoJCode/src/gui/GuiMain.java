@@ -11,6 +11,9 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +62,7 @@ public class GuiMain extends JFrame {
 	static Environment myDbEnvironment;
 	static DatabaseConfig dbConfig;
 	static Database myDatabase;
-	
+	JTable friends;
 	
 	
 	public static void testdb1()
@@ -97,8 +100,7 @@ public class GuiMain extends JFrame {
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		testdb1();
+
 		System.out.println("==================================");
 		System.out.println();
 		System.out.println("gui main begin:");
@@ -254,6 +256,7 @@ public class GuiMain extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			lineEdit_Search.setText("");
+			pane3.setViewportView(test_data());
 		}
 		
 	}
@@ -285,6 +288,9 @@ public class GuiMain extends JFrame {
 		}
 
 	}
+	
+	
+	
 	//选择数据库
 	public class dbselectComboxListener implements ActionListener {
 		
@@ -293,6 +299,7 @@ public class GuiMain extends JFrame {
 			// TODO Auto-generated method stub
 			currentdb = combox_dbsel.getSelectedItem().toString();
 			System.out.println("select db:" + currentdb);
+			pane3.setViewportView(test_data());
 		}
 		
 	}
@@ -321,45 +328,47 @@ public class GuiMain extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-//			lineEdit_Search.setText("");
+//			// TODO Auto-generated method stub
+////			lineEdit_Search.setText("");
+////			System.out.println("搜索关键字:" + lineEdit_Search.getText());
 //			System.out.println("搜索关键字:" + lineEdit_Search.getText());
-			System.out.println("搜索关键字:" + lineEdit_Search.getText());
-//			rview.setText(lineEdit_Search.getText());
-			dbName = "test2.db";
-			fileName = "savefile.txt";
-			
-			BerkeleyOper readdb = new BerkeleyOper(dbName, fileName);
-			readdb.openDatabase();
-//			readdb.readFromDatabase(lineEdit_Search.getText());
-			
-			String searchkey = lineEdit_Search.getText();
-		
-			long begin = System.currentTimeMillis(); 
-			boolean findedflag = false;
-			ArrayList<String> dblst = readdb.getEveryItem();
-			for (String inkey : dblst) {
-				
-//				System.out.println("====items : " + inkey);
-				String inresult = readdb.readFromDatabase(inkey);
-				if(inresult.contains(searchkey))
-				{
-					findedflag = true;
-					rview.setText(inresult);
-					System.out.println("==========find result of [" + searchkey + "]");
-				}
-			}
-			
-			if(!findedflag)
-			{
-				System.out.println("==========!!!no find result of [" + searchkey + "]");				
-			}
-			readdb.closeDatabase();
-			
-			long end = System.currentTimeMillis();   
-//	        long result = end - begin;
-	        System.out.println("readFromDatabase nums : " + dblst.size() + ", 执行耗时:" + (end - begin) + " 毫秒");
-			
+////			rview.setText(lineEdit_Search.getText());
+////			dbName = "test2.db";
+//			dbName = getCurrentDbName();
+//			fileName = "savefile.txt";
+//			
+//			BerkeleyOper readdb = new BerkeleyOper(dbName, fileName);
+//			readdb.openDatabase();
+////			readdb.readFromDatabase(lineEdit_Search.getText());
+//			
+//			String searchkey = lineEdit_Search.getText();
+//		
+//			long begin = System.currentTimeMillis(); 
+//			boolean findedflag = false;
+//			ArrayList<String> dblst = readdb.getEveryItem();
+//			for (String inkey : dblst) {
+//				
+////				System.out.println("====items : " + inkey);
+//				String inresult = readdb.readFromDatabase(inkey);
+//				if(inresult.contains(searchkey))
+//				{
+//					findedflag = true;
+//					rview.setText(inresult);
+//					System.out.println("==========find result of [" + searchkey + "]");
+//				}
+//			}
+//			
+//			if(!findedflag)
+//			{
+//				System.out.println("==========!!!no find result of [" + searchkey + "]");				
+//			}
+//			readdb.closeDatabase();
+//			
+//			long end = System.currentTimeMillis();   
+////	        long result = end - begin;
+//	        System.out.println("readFromDatabase nums : " + dblst.size() + ", 执行耗时:" + (end - begin) + " 毫秒");
+//			
+	        pane3.setViewportView(test_data_search());
 			
 		}
 		
@@ -376,6 +385,16 @@ public class GuiMain extends JFrame {
 			
 		}
 		
+	}
+	
+	public class DeleteButton_Listener implements ActionListener{
+		public void actionPerformed(ActionEvent arg0) {
+			
+//			lineEdit_Search.setText("");
+//			rview.setText("");
+//			System.out.println("搜索关键字:" + lineEdit_Search.getText());
+			
+		}
 	}
 	
     /**
@@ -398,14 +417,20 @@ public class GuiMain extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			String keys = getCurrentTime();
-			System.out.println("入库, key:" + keys);
-			dbName = "test2.db";
+			System.out.println("入库, key:" + keys + ", currentdb:" + getCurrentDbName());
+//			dbName = "test2.db";
+			dbName = getCurrentDbName();
 			fileName = "savefile.txt";
+//			getCurrentDbName();
+			
 			
 			BerkeleyOper writedb = new BerkeleyOper(dbName, fileName);
 			writedb.openDatabase();
 			writedb.writeToDatabase(keys, getSystemClipboard(), true);
 			writedb.closeDatabase();
+			
+			pane3.setViewportView(test_data());
+//			test_data();
 			
 		}
 		
@@ -458,11 +483,29 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.1";
+	final String version = "v1.2";
 	
 	//===========inter use begin===============
 	String currentdb;
+	//获取当前数据库的名称
+	String getCurrentDbName()
+	{
+		String dbName = null;
+		currentdb = combox_dbsel.getSelectedItem().toString();
+		for (String string : dbstrlist) {
+			if(currentdb == string)
+			{
+				dbName = string.replace("+", "D").toUpperCase() + "db";
+				break;
+			}
+		}
+
+		return dbName;
+		
+	}
 	
+	Box lvbox;
+	JScrollPane pane3;
 
 	void genJGui()
 	{
@@ -506,7 +549,7 @@ public class GuiMain extends JFrame {
 
 
 
-		JScrollPane pane3 = new JScrollPane (test_data());	
+		pane3 = new JScrollPane (test_data());
 		
         Box hbox1=Box.createHorizontalBox();//创建一个水平箱子
         hbox1.add(label); //在水平箱子上添加一个标签组件，并且创建一个不可见的、20个单位的组件。在这之后再添加一个文本框组件
@@ -518,7 +561,9 @@ public class GuiMain extends JFrame {
         hbox1.add(checkbox_ag);
         hbox1.add(combox_dbsel);
 //        hbox1.add(selDbButton);
-        
+        lvbox=Box.createVerticalBox();
+        lvbox.add(hbox1);
+        lvbox.add(pane3); 
         
         //添加listener
         combox_dbsel.addActionListener(new dbselectComboxListener());
@@ -526,9 +571,6 @@ public class GuiMain extends JFrame {
         lineEdit_Search.addActionListener(new lineEdit_Search_Listener());
 //        lineEdit_Search.addKeyListener();
         
-        Box lvbox=Box.createVerticalBox();
-        lvbox.add(hbox1);
-        lvbox.add(pane3);
         
 		InDbButton      = new JButton("入库");
 		rightcleanButton   = new JButton("右清空");
@@ -546,6 +588,7 @@ public class GuiMain extends JFrame {
 		rightcleanButton.addActionListener(new rightcleanButton_Listener());
 		getClipdButton.addActionListener(new getClipdButtonListener());
 		InDbButton.addActionListener(new InDbBtnClickedLitener());
+		deleteButton.addActionListener(new DeleteButton_Listener());
 		
         Box vbox1=Box.createVerticalBox();
         vbox1.add(InDbButton);
@@ -617,30 +660,30 @@ public class GuiMain extends JFrame {
 
 	
 	
-	
+	String dbstrlist[] = { "Android", 
+            "C", 
+            "C++", 
+            "Debug", 
+            "Erlang", 
+            "Hadoop",
+            "Java", 
+            "JavaScript", 
+            "MySql", 
+            "Oracle", 
+            "Patchs", 
+            "Perl", 
+            "Postgresql",
+            "Rust", 
+            "shell", 
+            "Sqlite3", 
+            "Swift", 
+            "Php", 
+            "Python", 
+            "Qt", 
+            "Qtquick", "Unittest"}; 	
 	JComboBox<Object> JComboBoxKeyList()
 	{
-		String dbstrlist[] = { "Android", 
-	               "C", 
-	               "C++", 
-	               "Debug", 
-	               "Erlang", 
-	               "Hadoop",
-	               "Java", 
-	               "JavaScript", 
-	               "MySql", 
-	               "Oracle", 
-	               "Patchs", 
-	               "Perl", 
-	               "Postgresql",
-	               "Rust", 
-	               "shell", 
-	               "Sqlite3", 
-	               "Swift", 
-	               "Php", 
-	               "Python", 
-	               "Qt", 
-	               "Qtquick", "Unittest"};   
+  
 		return new JComboBox<Object>(dbstrlist);
 	}
 	
@@ -658,22 +701,161 @@ public class GuiMain extends JFrame {
 		
 	}
 	
+	Object[][] getDbContent_Search()
+	{
+		System.out.println("搜索关键字:" + lineEdit_Search.getText());
+		dbName = getCurrentDbName();
+		fileName = "savefile.txt";
+		
+		BerkeleyOper readdb = new BerkeleyOper(dbName, fileName);
+		readdb.openDatabase();
+		String searchkey = lineEdit_Search.getText();
+	
+		long begin = System.currentTimeMillis(); 
+		boolean findedflag = false;
+		ArrayList<String> dblst = readdb.getEveryItem();
+		int rows = dblst.size();
+		if(0 == rows)
+		{
+			rows = 1;
+		}
+		Object[][] rawdata = new  Object[rows][2];		
+		int no = 0;
+		
+		for (String inkey : dblst) {
+			String inresult = readdb.readFromDatabase(inkey);
+			if(inresult.toLowerCase().contains(searchkey.toLowerCase()))
+			{
+				rawdata[no][0] = inkey;
+				rawdata[no][1] = inresult;
+				findedflag = true;
+				rview.setText(inresult);
+				System.out.println("==========find result of [" + searchkey + "]");
+			}
+		}
+		if(!findedflag)
+		{
+			System.out.println("==========!!!no find result of [" + searchkey + "]");				
+		}
+		readdb.closeDatabase();
+		
+		long end = System.currentTimeMillis();   
+        System.out.println("readFromDatabase nums : " + dblst.size() + ", 执行耗时:" + (end - begin) + " 毫秒");
+		
+		if(!findedflag)
+		{
+			System.out.println("==========!!!no find result of [" + searchkey + "]");
+			rawdata[0][0] = "nokey";
+			rawdata[0][1] = "nodata";
+		}
+		else
+		{
+			return rawdata;
+		}
+		
+		return rawdata;
+	}
+	
+	Object[][] getDbContent()
+	{
+		dbName = getCurrentDbName();
+		fileName = "savefile.txt";
+		
+		BerkeleyOper readdb = new BerkeleyOper(dbName, fileName);
+		readdb.openDatabase();
+		
+		long begin = System.currentTimeMillis(); 
+		boolean findedflag = false;
+		ArrayList<String> dblst = readdb.getEveryItem();
+		int rows = dblst.size();
+		if(0 == rows)
+		{
+			rows = 1;
+		}
+		Object[][] rawdata = new  Object[rows][2];
+		int no = 0;
+		for (String inkey : dblst) {
+			rawdata[no][0] = inkey;
+			String inresult = readdb.readFromDatabase(inkey);
+			rawdata[no][1] = inresult;
+			System.out.println("==========find result of [getDbContent]");
+			no += 1;
+			findedflag = true;
+		}
+		readdb.closeDatabase();
+		long end = System.currentTimeMillis();   
+		System.out.println("readFromDatabase nums : " + dblst.size() + ", 执行耗时:" + (end - begin) + " 毫秒");
+		
+		if(!findedflag)
+		{
+			System.out.println("==========!!!no find result of [getDbContent ]");
+			rawdata[0][0] = "nokey";
+			rawdata[0][1] = "nodata";
+		}
+		else
+		{
+			return rawdata;
+		}
+		
+		return rawdata;
+	}
+	
+	
 	JTable test_data()
 	{
 
 		final Object[] columnNames = {"索引字段", "内容字段",//列名最好用final修饰
 				};
-		Object[][] rowData = {
-				{"ddd", "男"},
-				{"eee", "女"},
-				{"eee", "女"},
-				{"eee", "女"},
-				{"eee", "女"},
-				{"fff", "男"},
-		};
+//		Object[][] rowData = {
+//				{"ddd", "男"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"fff", "男"},
+//		};
+		
+		Object[][] rowData = getDbContent();
 		
 
-		JTable friends = new JTable (rowData, columnNames);
+		friends = new JTable (rowData, columnNames);
+		friends.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int row = friends.getSelectedRow();
+		        int col = friends.getSelectedColumn();
+		        String value = (String) friends.getValueAt(row, col);
+//		        System.out.println("row:" + row + ", col:"  + col + ", value:" + value);
+		        rview.setText(value);
+//		        JOptionPane.showMessageDialog(null, value);
+			}
+		});
 		friends.setPreferredScrollableViewportSize(new Dimension(1000, 10000));//设置表格的大小
 		friends.setRowHeight (30);//设置每行的高度为20
 		friends.setRowHeight (0, 20);//设置第1行的高度为15
@@ -683,7 +865,90 @@ public class GuiMain extends JFrame {
 		friends.setSelectionForeground (Color.red);//设置所选择行的前景色
 		friends.setGridColor (Color.black);//设置网格线的颜色
 		friends.selectAll ();//选择所有行
-		friends.setRowSelectionInterval (0,2);//设置初始的选择行,这里是1到3行都处于选择状态
+//		friends.setRowSelectionInterval (0,2);//设置初始的选择行,这里是1到3行都处于选择状态
+		friends.clearSelection ();//取消选择
+		friends.setDragEnabled (true);//不懂这个
+		friends.setShowGrid (false);//是否显示网格线
+		friends.setShowHorizontalLines (false);//是否显示水平的网格线
+		friends.setShowVerticalLines (true);//是否显示垂直的网格线
+//		friends.setValueAt ("tt", 0, 0);//设置某个单元格的值,这个值是一个对象
+		friends.doLayout ();
+		friends.setBackground (Color.lightGray);
+		
+		
+//		friends.addColumnSelectionInterval(2, 2);
+//		friends.addComponentListener(l);
+		
+		
+		return friends;
+	}
+
+	JTable test_data_search()
+	{
+
+		final Object[] columnNames = {"索引字段", "内容字段",//列名最好用final修饰
+				};
+//		Object[][] rowData = {
+//				{"ddd", "男"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"eee", "女"},
+//				{"fff", "男"},
+//		};
+		
+		Object[][] rowData = getDbContent_Search();
+		
+
+		friends = new JTable (rowData, columnNames);
+		friends.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int row = friends.getSelectedRow();
+		        int col = friends.getSelectedColumn();
+		        String value = (String) friends.getValueAt(row, col);
+//		        System.out.println("row:" + row + ", col:"  + col + ", value:" + value);
+		        rview.setText(value);
+//		        JOptionPane.showMessageDialog(null, value);
+			}
+		});
+//		friends.addMouseListener();
+		friends.setPreferredScrollableViewportSize(new Dimension(1000, 10000));//设置表格的大小
+		friends.setRowHeight (30);//设置每行的高度为20
+		friends.setRowHeight (0, 20);//设置第1行的高度为15
+		friends.setRowMargin (5);//设置相邻两行单元格的距离
+		friends.setRowSelectionAllowed (true);//设置可否被选择.默认为false
+		friends.setSelectionBackground (Color.white);//设置所选择行的背景色
+		friends.setSelectionForeground (Color.red);//设置所选择行的前景色
+		friends.setGridColor (Color.black);//设置网格线的颜色
+		friends.selectAll ();//选择所有行
+//		friends.setRowSelectionInterval (0,2);//设置初始的选择行,这里是1到3行都处于选择状态
 		friends.clearSelection ();//取消选择
 		friends.setDragEnabled (true);//不懂这个
 		friends.setShowGrid (false);//是否显示网格线
