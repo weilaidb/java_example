@@ -29,6 +29,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -299,7 +300,10 @@ public class GuiMain extends JFrame {
 			// TODO Auto-generated method stub
 			currentdb = combox_dbsel.getSelectedItem().toString();
 			System.out.println("select db:" + currentdb);
-			pane3.setViewportView(test_data());
+			if(lineEdit_Search.getText().isEmpty())
+				pane3.setViewportView(test_data());
+			else
+				pane3.setViewportView(test_data_search());
 		}
 		
 	}
@@ -412,8 +416,8 @@ public class GuiMain extends JFrame {
         return new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
     }
     
+    
 	public class InDbBtnClickedLitener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			String keys = getCurrentTime();
@@ -423,13 +427,27 @@ public class GuiMain extends JFrame {
 			fileName = "savefile.txt";
 //			getCurrentDbName();
 			
+			String clipdata = getSystemClipboard();
+			if(clipdata.trim().isEmpty())
+				return;
 			
+			if(null == olddata)
+			{
+				olddata = "";
+			}
+			
+			if(olddata.equals(clipdata))
+			{
+				return;
+			}
 			BerkeleyOper writedb = new BerkeleyOper(dbName, fileName);
 			writedb.openDatabase();
 			writedb.writeToDatabase(keys, getSystemClipboard(), true);
 			writedb.closeDatabase();
 			
 			pane3.setViewportView(test_data());
+			
+			olddata = clipdata;
 //			test_data();
 			
 		}
@@ -483,7 +501,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.3";
+	final String version = "v1.4";
 	
 	//===========inter use begin===============
 	String currentdb;
@@ -506,7 +524,8 @@ public class GuiMain extends JFrame {
 	
 	Box lvbox;
 	JScrollPane pane3;
-
+	static String olddata = null;
+	
 	void genJGui()
 	{
 		// 方法3：通过分析匿名类名称()  
@@ -628,6 +647,8 @@ public class GuiMain extends JFrame {
         rvbox.add(hbox2);
         rvbox.add(Box.createVerticalGlue());
         rvbox.add(scrollPane);
+        JScrollBar sBar = scrollPane.getVerticalScrollBar();
+        sBar.setValue(0); 
 //        rvbox.add(rview);
 	
         
@@ -853,6 +874,8 @@ public class GuiMain extends JFrame {
 		        String value = (String) friends.getValueAt(row, col);
 //		        System.out.println("row:" + row + ", col:"  + col + ", value:" + value);
 		        rview.setText(value);
+//		        JScrollBar   sbar=rview.scrollRectToVisible(getMaximizedBounds());   
+//		        sbar.setValue(sbar.getMaximum()); 
 //		        JOptionPane.showMessageDialog(null, value);
 			}
 		});
