@@ -1,0 +1,28 @@
+{
+  "name": "runoob",
+  "version": "1.0.0",
+  "description": "first using for management packages",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.15.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "make test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/weilaidb/java_example.git"
+  },
+  "author": "weilai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/weilaidb/java_example/issues"
+  },
+  "homepage": "https://github.com/weilaidb/java_example#readme",
+  "keywords": [
+    "Node.js测试模块",
+    "www.weilai.com"
+  ]
+}
