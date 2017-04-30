@@ -17,6 +17,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -501,7 +502,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.4";
+	final String version = "v1.6";
 	
 	//===========inter use begin===============
 	String currentdb;
@@ -735,6 +736,8 @@ public class GuiMain extends JFrame {
 		long begin = System.currentTimeMillis(); 
 		boolean findedflag = false;
 		ArrayList<String> dblst = readdb.getEveryItem();
+		//·´Ðò
+		Collections.reverse(dblst);
 		int rows = dblst.size();
 		if(0 == rows)
 		{
@@ -749,6 +752,7 @@ public class GuiMain extends JFrame {
 			{
 				rawdata[no][0] = inkey;
 				rawdata[no][1] = inresult;
+				no+=1;
 				findedflag = true;
 				rview.setText(inresult);
 				System.out.println("==========find result of [" + searchkey + "]");
@@ -788,6 +792,8 @@ public class GuiMain extends JFrame {
 		long begin = System.currentTimeMillis(); 
 		boolean findedflag = false;
 		ArrayList<String> dblst = readdb.getEveryItem();
+		//·´Ðò
+		Collections.reverse(dblst);
 		int rows = dblst.size();
 		if(0 == rows)
 		{
