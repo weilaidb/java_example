@@ -64,6 +64,7 @@ public class GuiMain extends JFrame {
 	static Environment myDbEnvironment;
 	static DatabaseConfig dbConfig;
 	static Database myDatabase;
+	static boolean bDbChanged;
 	JTable friends;
 	
 	
@@ -299,6 +300,7 @@ public class GuiMain extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
+			bDbChanged = true;
 			currentdb = combox_dbsel.getSelectedItem().toString();
 			System.out.println("select db:" + currentdb);
 			if(lineEdit_Search.getText().isEmpty())
@@ -437,7 +439,7 @@ public class GuiMain extends JFrame {
 				olddata = "";
 			}
 			
-			if(olddata.equals(clipdata))
+			if(olddata.equals(clipdata) && !bDbChanged)
 			{
 				return;
 			}
@@ -449,6 +451,7 @@ public class GuiMain extends JFrame {
 			pane3.setViewportView(test_data());
 			
 			olddata = clipdata;
+			bDbChanged = false;
 //			test_data();
 			
 		}
