@@ -505,7 +505,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.6";
+	final String version = "v1.7";
 	
 	//===========inter use begin===============
 	String currentdb;
@@ -689,7 +689,8 @@ public class GuiMain extends JFrame {
             "C", 
             "C++", 
             "Debug", 
-            "Erlang", 
+            "Erlang",
+            "Go",
             "Hadoop",
             "Java", 
             "JavaScript", 
