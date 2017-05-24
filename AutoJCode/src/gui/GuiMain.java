@@ -505,7 +505,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.7";
+	final String version = "v1.8";
 	
 	//===========inter use begin===============
 	String currentdb;
@@ -688,12 +688,14 @@ public class GuiMain extends JFrame {
 	String dbstrlist[] = { "Android", 
             "C", 
             "C++", 
+            "C#", 
             "Debug", 
             "Erlang",
             "Go",
             "Hadoop",
             "Java", 
             "JavaScript", 
+            "MongoDB", 
             "MySql", 
             "Oracle", 
             "Patchs", 
