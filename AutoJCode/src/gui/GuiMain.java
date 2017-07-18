@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -129,8 +131,8 @@ public class GuiMain extends JFrame {
 	public static String getSystemClipboard(){//获取系统剪切板的文本内容[如果系统剪切板复制的内容是文本]  
 		Clipboard sysClb=null;  
 		sysClb = Toolkit.getDefaultToolkit().getSystemClipboard();  
-		Transferable t = sysClb.getContents(null);  
-		//Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);  //跟上面三行代码一样  
+//		Transferable t = sysClb.getContents(null);  
+		Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);  //跟上面三行代码一样  
 		try {   
 			if (null != t && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {   
 				String text = (String)t.getTransferData(DataFlavor.stringFlavor);   
@@ -419,40 +421,45 @@ public class GuiMain extends JFrame {
         return new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
     }
     
+    public void DoInsertDb()
+    {
+
+		String keys = getCurrentTime();
+		System.out.println("入库, key:" + keys + ", currentdb:" + getCurrentDbName());
+//		dbName = "test2.db";
+		dbName = getCurrentDbName();
+		fileName = "savefile.txt";
+//		getCurrentDbName();
+		
+		String clipdata = getSystemClipboard();
+		if(clipdata.trim().isEmpty())
+			return;
+		
+		if(null == olddata)
+		{
+			olddata = "";
+		}
+		
+		if(olddata.equals(clipdata) && !bDbChanged)
+		{
+			return;
+		}
+		BerkeleyOper writedb = new BerkeleyOper(dbName, fileName);
+		writedb.openDatabase();
+		writedb.writeToDatabase(keys, getSystemClipboard(), true);
+		writedb.closeDatabase();
+		
+		pane3.setViewportView(test_data());
+		
+		olddata = clipdata;
+		bDbChanged = false;
+//		test_data();	
+    }
     
 	public class InDbBtnClickedLitener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			String keys = getCurrentTime();
-			System.out.println("入库, key:" + keys + ", currentdb:" + getCurrentDbName());
-//			dbName = "test2.db";
-			dbName = getCurrentDbName();
-			fileName = "savefile.txt";
-//			getCurrentDbName();
-			
-			String clipdata = getSystemClipboard();
-			if(clipdata.trim().isEmpty())
-				return;
-			
-			if(null == olddata)
-			{
-				olddata = "";
-			}
-			
-			if(olddata.equals(clipdata) && !bDbChanged)
-			{
-				return;
-			}
-			BerkeleyOper writedb = new BerkeleyOper(dbName, fileName);
-			writedb.openDatabase();
-			writedb.writeToDatabase(keys, getSystemClipboard(), true);
-			writedb.closeDatabase();
-			
-			pane3.setViewportView(test_data());
-			
-			olddata = clipdata;
-			bDbChanged = false;
-//			test_data();
+			DoInsertDb();
 			
 		}
 		
@@ -505,7 +512,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.8";
+	final String version = "v1.9";
 	
 	//===========inter use begin===============
 	String currentdb;
@@ -625,6 +632,9 @@ public class GuiMain extends JFrame {
         vbox1.add(toolButton);
         vbox1.add(aboutButton);
         vbox1.add(closeButton);
+        
+        Timer timer_clipboard = new Timer();
+        timer_clipboard.schedule(new TimerClipBoardTask(), 1000, 2000); 
         
 		
 		saveButton         = new JButton("save");
@@ -1012,6 +1022,45 @@ public class GuiMain extends JFrame {
 		}
 		
 	}
+	
+	public String uiclipboard; //存储粘贴板中的数据
 
+	class TimerClipBoardTask extends TimerTask {  
+		  
+	    @Override  
+	    public void run() {  	         
+	        if(!checkbox_ag.isSelected())
+	        {
+	        	return;
+	        }
+	        String curtext = getSystemClipboard1();
+//	        System.out.println("clipboardinfo : " + curtext); 
+	        if(!curtext.equals(uiclipboard))
+	        {
+	        	uiclipboard = curtext;
+//	        	System.out.println("clipboard diff save file "); 
+	        	DoInsertDb();
+	        	
+	        }
+	        
+	    }  
+	  
+	}  
+	public String getSystemClipboard1(){//获取系统剪切板的文本内容[如果系统剪切板复制的内容是文本]  
+	    Clipboard sysClb=null;  
+	    sysClb = Toolkit.getDefaultToolkit().getSystemClipboard();  
+	    Transferable t = sysClb.getContents(null);  
+	    //Transferable t = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);  //跟上面三行代码一样  
+	    try {   
+	        if (null != t && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {   
+	        String text = (String)t.getTransferData(DataFlavor.stringFlavor);   
+	        return text;   
+	        }   
+	    } catch (UnsupportedFlavorException e) {  
+	        //System.out.println("Error tip: "+e.getMessage());  
+	    } catch (IOException e) {   
+	    }   //System.out.println("Error tip: "+e.getMessage());  
+	    return null;   
+	}  
 	
 }
