@@ -512,7 +512,7 @@ public class GuiMain extends JFrame {
 	JDialog about = null;
 	
 	boolean ison = false;
-	final String version = "v1.9";
+	final String version = "v2.0";
 	
 	//===========inter use begin===============
 	String currentdb;
