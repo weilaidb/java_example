@@ -634,7 +634,7 @@ public class GuiMain extends JFrame {
         vbox1.add(closeButton);
         
         Timer timer_clipboard = new Timer();
-        timer_clipboard.schedule(new TimerClipBoardTask(), 1000, 2000); 
+        timer_clipboard.schedule(new TimerClipBoardTask(), 2000, 300); 
         
 		
 		saveButton         = new JButton("save");
@@ -821,7 +821,7 @@ public class GuiMain extends JFrame {
 			rawdata[no][0] = inkey;
 			String inresult = readdb.readFromDatabase(inkey);
 			rawdata[no][1] = inresult;
-			System.out.println("==========find result of [getDbContent]");
+			//System.out.println("==========find result of [getDbContent]");
 			no += 1;
 			findedflag = true;
 		}
