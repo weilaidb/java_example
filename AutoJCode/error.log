@@ -1,0 +1,4 @@
+Exception in thread "Timer-0" java.lang.NullPointerException
+	at gui.GuiMain$TimerClipBoardTask.run(GuiMain.java:1038)
+	at java.util.TimerThread.mainLoop(Unknown Source)
+	at java.util.TimerThread.run(Unknown Source)
