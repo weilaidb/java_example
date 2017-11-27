@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exe4j version="5.1" transformSequenceNumber="2">
   <directoryPresets config="E:/Java/java_example/AutoJCode" />
-  <application name="AutoJcode64" distributionSourceDir="E:/Java/java_example/AutoJCode">
+  <application name="AutoJcode64" distributionSourceDir="E:/Java/java_example/AutoJCode/bin">
     <languages>
       <principalLanguage id="en" customLocalizationFile="" />
     </languages>
   </application>
-  <executable name="AutoJcode64" type="1" iconSet="true" iconFile="E:/Java/java_example/AutoJCode/src/img/logo64.ico" executableDir="./exe" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false" amd64="true">
+  <executable name="AutoJcode64" type="1" iconSet="true" iconFile="E:/Java/java_example/AutoJCode/src/img/logo64.ico" executableDir="" redirectStderr="true" stderrFile="error.log" stderrMode="append" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false" amd64="true">
     <messageSet />
     <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" companyName="" productVersion="" />
   </executable>
@@ -23,8 +23,8 @@
       <envVar name="JDK_HOME" />
     </searchSequence>
     <classPath>
-      <directory location="./bin" failOnError="false" />
-      <archive location="E:/Java/java_example/AutoJCode/je-6.4.25.jar" failOnError="false" />
+      <archive location="E:/Java/java_example/AutoJCode/bin/je-6.4.25.jar" failOnError="false" />
+      <directory location="." failOnError="false" />
     </classPath>
     <nativeLibraryDirectories />
     <vmOptions />

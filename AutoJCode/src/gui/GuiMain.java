@@ -519,6 +519,7 @@ public class GuiMain extends JFrame {
 	//获取当前数据库的名称
 	String getCurrentDbName()
 	{
+		
 		String dbName = null;
 		currentdb = combox_dbsel.getSelectedItem().toString();
 		for (String string : dbstrlist) {
@@ -634,7 +635,7 @@ public class GuiMain extends JFrame {
         vbox1.add(closeButton);
         
         Timer timer_clipboard = new Timer();
-        timer_clipboard.schedule(new TimerClipBoardTask(), 2000, 300); 
+        timer_clipboard.schedule(new TimerClipBoardTask(), 1000, 300); 
         
 		
 		saveButton         = new JButton("save");
@@ -1023,7 +1024,7 @@ public class GuiMain extends JFrame {
 		
 	}
 	
-	public String uiclipboard; //存储粘贴板中的数据
+	public String uiclipboard=""; //存储粘贴板中的数据
 
 	class TimerClipBoardTask extends TimerTask {  
 		  
@@ -1035,6 +1036,8 @@ public class GuiMain extends JFrame {
 	        }
 	        String curtext = getSystemClipboard1();
 //	        System.out.println("clipboardinfo : " + curtext); 
+	        if(curtext.isEmpty())
+	        	return;
 	        if(!curtext.equals(uiclipboard))
 	        {
 	        	uiclipboard = curtext;
